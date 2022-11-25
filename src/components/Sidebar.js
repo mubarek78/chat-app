@@ -1,8 +1,14 @@
 import React from 'react'
-
+import Navbar from "./Navbar"
+import Search from "./Search"
+import Chats from './Chats'
 function Sidebar() {
   return (
-    <div>Sidebare</div>
+    <div className="sidebar">
+    <Navbar />
+    <Search/>
+    <Chats/>
+    </div>
   )
 }
 

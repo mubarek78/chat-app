@@ -1,9 +1,9 @@
 import React from 'react'
 
-function Chata() {
+function Chats() {
   return (
     <div>Chata</div>
   )
 }
 
-export default Chata
+export default Chats

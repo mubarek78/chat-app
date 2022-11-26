@@ -1,8 +1,17 @@
 import React from 'react'
 
-function Navbar() {
+const Navbar = () => {
+  
+
   return (
-    <div>Navbar</div>
+    <div className='navbar'>
+      <span className="logo">Muba Chat</span>
+      <div className="user">
+        <img src='../images/addAvatar.png' alt="" />
+        <span>{"Mubarek"}</span>
+        <button >logout</button>
+      </div>
+    </div>
   )
 }
 

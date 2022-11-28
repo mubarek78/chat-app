@@ -25,13 +25,27 @@ const Register = () => {
     const password = e.target[2].value;
     const file = url;
 
-    try {
-      //Create user
-      const res = await createUserWithEmailAndPassword(auth, email, password);
-     console.log(res)
-      //Create a unique image name
-      // const date = new Date().getTime();
-      // const storageRef = ref(storage, `${username + date}`);
+
+createUserWithEmailAndPassword(auth, email, password)
+  .then((userCredential) => {
+    // Signed in 
+    const user = userCredential.user;
+    // ...
+    console.log(user.email)
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // ..
+  });
+
+    // try {
+    //   //Create user
+    //   const res = await createUserWithEmailAndPassword(auth, email, password);
+
+    //   //Create a unique image name
+    //   const date = new Date().getTime();
+    //   const storageRef = ref(storage, `${username + date}`);
 
     //   await uploadBytesResumable(storageRef, file).then(() => {
     //     getDownloadURL(storageRef).then(async (downloadURL) => {
@@ -59,10 +73,10 @@ const Register = () => {
     //       }
     //     });
     //   });
-    } catch (err) {
-      setErr(true);
-      setLoading(false);
-    }
+    // } catch (err) {
+    //   setErr(true);
+    //   setLoading(false);
+    // }
   };
 
   return (

@@ -26,57 +26,46 @@ const Register = () => {
     const file = url;
 
 
-createUserWithEmailAndPassword(auth, email, password)
-  .then((userCredential) => {
-    // Signed in 
-    const user = userCredential.user;
-    // ...
-    console.log(user.email)
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // ..
-  });
 
-    // try {
-    //   //Create user
-    //   const res = await createUserWithEmailAndPassword(auth, email, password);
 
-    //   //Create a unique image name
-    //   const date = new Date().getTime();
-    //   const storageRef = ref(storage, `${username + date}`);
+    try {
+      //Create user
+      const res = await createUserWithEmailAndPassword(auth, email, password);
 
-    //   await uploadBytesResumable(storageRef, file).then(() => {
-    //     getDownloadURL(storageRef).then(async (downloadURL) => {
-    //       try {
-    //         //Update profile
-    //         await updateProfile(res.user, {
-    //           username,
-    //           photoURL: downloadURL,
-    //         });
-    //         //create user on firestore
-    //         await setDoc(doc(db, "users", res.user.uid), {
-    //           uid: res.user.uid,
-    //           username,
-    //           email,
-    //           photoURL: downloadURL,
-    //         });
+      //Create a unique image name
+      const date = new Date().getTime();
+      const storageRef = ref(storage, `${username + date}`);
 
-    //         //create empty user chats on firestore
-    //         await setDoc(doc(db, "userChats", res.user.uid), {});
-    //         navigate("/");
-    //       } catch (err) {
-    //         console.log(err);
-    //         setErr(true);
-    //         setLoading(false);
-    //       }
-    //     });
-    //   });
-    // } catch (err) {
-    //   setErr(true);
-    //   setLoading(false);
-    // }
+      await uploadBytesResumable(storageRef, file).then(() => {
+        getDownloadURL(storageRef).then(async (downloadURL) => {
+          try {
+            //Update profile
+            await updateProfile(res.user, {
+              username,
+              photoURL: downloadURL,
+            });
+            //create user on firestore
+            // await setDoc(doc(db, "users", res.user.uid), {
+            //   uid: res.user.uid,
+            //   username,
+            //   email,
+            //   photoURL: downloadURL,
+            // });
+
+            //create empty user chats on firestore
+            // await setDoc(doc(db, "userChats", res.user.uid), {});
+            // navigate("/");
+          } catch (err) {
+            console.log(err);
+            setErr(true);
+            setLoading(false);
+          }
+        });
+      });
+    } catch (err) {
+      setErr(true);
+      setLoading(false);
+    }
   };
 
   return (

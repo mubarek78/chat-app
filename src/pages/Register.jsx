@@ -25,6 +25,9 @@ const Register = () => {
     const password = e.target[2].value;
     const file = e.target[3].files[0];
 
+ //Create a unique image name
+ const date = new Date().getTime();
+ const storageRef = ref(storage, `${username + date}`);
 
 
 
@@ -32,13 +35,11 @@ const Register = () => {
       //Create user
       const res = await createUserWithEmailAndPassword(auth, email, password);
 
-      //Create a unique image name
-      const date = new Date().getTime();
-      const storageRef = ref(storage, `${username + date}`);
-      const uploadTask = uploadBytesResumable(storageRef, file);
-
+     console.log(auth)
+    
       await uploadBytesResumable(storageRef, file).then(() => {
 
+        const uploadTask = uploadBytesResumable(storageRef, file);
         uploadTask.on('state_changed', 
         (snapshot) => {
           // Observe state change events such as progress, pause, and resume
@@ -54,24 +55,26 @@ const Register = () => {
               break;
           }
         })
-
+        console.log(auth.currentUser)
+        console.log(res.user)
         getDownloadURL(storageRef).then(async (downloadURL) => {
+          console.log(downloadURL)
           try {
             //Update profile
-            await updateProfile(res.user, {
+            await updateProfile(auth.currentUser, {
               displayName: username,
               photoURL: downloadURL,
             });
             // create user on firestore
-            await setDoc(doc(db, "users", res.user.uid), {
-              uid: res.user.uid,
+            await setDoc(doc(db, "users", auth.currentUser.uid), {
+              uid: auth.currentUser.uid,
               displayName: username,
               email,
               photoURL: downloadURL,
             });
 
             // create empty user chats on firestore
-            await setDoc(doc(db, "userChats", res.user.uid), {});
+            await setDoc(doc(db, "userChats", auth.currentUser.uid), {});
             navigate("/");
           } catch (err) {
             console.log(err);

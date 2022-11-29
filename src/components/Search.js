@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect} from "react";
 import {
   collection,
   query,
@@ -9,6 +9,7 @@ import {
   updateDoc,
   serverTimestamp,
   getDoc,
+  limitToLast,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { AuthContext } from "../context/AuthContext";
@@ -19,12 +20,30 @@ const Search = () => {
 
   const { currentUser } = useContext(AuthContext);
 
+
+  // useEffect(() => {
+
+  //   return () => {
+  //     handleSearch1();
+  //   };
+  // }, [username])
+ 
+  const handleSearch1 = async (e) => {
+    setUsername(e.target.value)
+    const qe = query(collection(db, 'users'), where("displayName", "==", username));
+    const querySnapshot = await getDocs(qe);
+    querySnapshot.forEach((doc) => {
+      setUser(doc.data());
+      console.log(doc.data());
+    });
+  }
+
   const handleSearch = async () => {
     const q = query(
       collection(db, "users"),
       where("displayName", "==", username)
     );
-
+   
     try {
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
@@ -48,6 +67,9 @@ const Search = () => {
         : user.uid + currentUser.uid;
     try {
       const res = await getDoc(doc(db, "chats", combinedId));
+     
+       
+      
 
       if (!res.exists()) {
         //create a chat in chats collection
@@ -72,8 +94,10 @@ const Search = () => {
           [combinedId + ".date"]: serverTimestamp(),
         });
       }
+      console.log(res)
+    console.log("res")
     } catch (err) {}
-
+    
     setUser(null);
     setUsername("")
   };
@@ -83,8 +107,9 @@ const Search = () => {
         <input
           type="text"
           placeholder="Find a user"
+          onKeyPress={(e) => handleSearch1(e)}
           onKeyDown={handleKey}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => handleSearch1(e)}
           value={username}
         />
       </div>

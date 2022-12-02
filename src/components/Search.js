@@ -9,8 +9,9 @@ import {
   updateDoc,
   serverTimestamp,
   getDoc,
-  limitToLast,
 } from "firebase/firestore";
+import { getDatabase, ref, child, get } from "firebase/database";
+
 import { db } from "../firebase";
 import { AuthContext } from "../context/AuthContext";
 const Search = () => {
@@ -21,28 +22,19 @@ const Search = () => {
   const { currentUser } = useContext(AuthContext);
 
 
-  // useEffect(() => {
-
-  //   return () => {
-  //     handleSearch1();
-  //   };
-  // }, [username])
  
   const handleSearch1 = async (e) => {
     setUsername(e.target.value)
-    const qe = query(collection(db, 'users'), where("displayName", "==", username));
-    const querySnapshot = await getDocs(qe);
-    querySnapshot.forEach((doc) => {
-      setUser(doc.data());
-      console.log(doc.data());
-    });
+    // const qe = query(collection(db, 'users'), where("displayName", "==", username));
+    // const querySnapshot = await getDocs(qe);
+    // querySnapshot.forEach((doc) => {
+    //   setUser(doc.data());
+    //   console.log(doc.data());
+    // });
   }
 
   const handleSearch = async () => {
-    const q = query(
-      collection(db, "users"),
-      where("displayName", "==", username)
-    );
+    const q = query(collection(db, "users"), where("displayName", "==", username));
    
     try {
       const querySnapshot = await getDocs(q);
@@ -67,7 +59,18 @@ const Search = () => {
         : user.uid + currentUser.uid;
     try {
       const res = await getDoc(doc(db, "chats", combinedId));
-     
+    
+      const chatsCollectionRef = collection(db, "userChats");
+    
+        const getUsers = async () => {
+          const data = await getDocs(chatsCollectionRef);
+          const userDoc = doc(db, "userChats", currentUser.uid);
+          console.log(userDoc)
+          // (data.docs.map((doc) => console.log({ ...doc.data(), id: doc.id })));
+        };
+    
+        getUsers();
+      
        
       
 
@@ -92,11 +95,18 @@ const Search = () => {
             photoURL: currentUser.photoURL,
           },
           [combinedId + ".date"]: serverTimestamp(),
-        });
+       
+        // [combinedId.userInfo] : {
+        //      uid: currentUser.uid,
+        //     displayName: currentUser.displayName,
+        //     photoURL: currentUser.photoURL,
+        // }
+        // [combinedId.date] = serverTimestamp(),
+      });
       }
-      console.log(res)
-    console.log("res")
-    } catch (err) {}
+    } catch (err) {
+      console.log(err)
+    }
     
     setUser(null);
     setUsername("")
@@ -107,7 +117,6 @@ const Search = () => {
         <input
           type="text"
           placeholder="Find a user"
-          onKeyPress={(e) => handleSearch1(e)}
           onKeyDown={handleKey}
           onChange={(e) => handleSearch1(e)}
           value={username}

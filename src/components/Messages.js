@@ -8,9 +8,16 @@ const Messages = () => {
   const [messages, setMessages] = useState([]);
   const { data } = useContext(ChatContext);
 
+  // const chatsCollectionRef = collection(db, "chats");
+  // const [chats, setChats] = useState([]);
+
+
   useEffect(() => {
     const unSub = onSnapshot(doc(db, "chats", data.chatId), (doc) => {
       doc.exists() && setMessages(doc.data().messages);
+
+      // const chatdata = getDocs(chatsCollectionRef);
+      // setChats(chatdata.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     });
 
     return () => {

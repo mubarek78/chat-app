@@ -26,7 +26,7 @@ const Messages = () => {
   }, [data.chatId]);
 
   console.log(messages)
-
+  {if(messages.length > 0){
   return (
     <div className="messages">
       {messages.map((m) => (
@@ -34,6 +34,16 @@ const Messages = () => {
       ))}
     </div>
   );
+      }
+      // else{
+      //   return (
+      //     <div className="chats">
+      //      <h1>say HI</h1>
+       
+      //     </div>
+      //   );
+      // }
+    }
 };
 
 export default Messages;

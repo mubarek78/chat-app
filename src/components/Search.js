@@ -10,7 +10,7 @@ import {
   serverTimestamp,
   getDoc,
 } from "firebase/firestore";
-import { getDatabase, ref, child, get } from "firebase/database";
+
 
 import { db } from "../firebase";
 import { AuthContext } from "../context/AuthContext";

@@ -8,7 +8,7 @@ import { useNavigate, Link } from "react-router-dom";
 
 const Register = () => {
   const [err, setErr] = useState(false);
-  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   let url = "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50"
@@ -33,10 +33,8 @@ const Register = () => {
 
     try {
       //Create user
-      const res = await createUserWithEmailAndPassword(auth, email, password);
+      const res = await createUserWithEmailAndPassword(auth, email, password)
 
-     console.log(auth)
-    
       await uploadBytesResumable(storageRef, file).then(() => {
 
         const uploadTask = uploadBytesResumable(storageRef, file);
